@@ -1,17 +1,18 @@
 package com.ranunculus;
 
+import com.ranunculus.entries.Note;
+import com.ranunculus.entries.NotesFactory;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ResourceUtils;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.nio.ByteBuffer;
-import java.nio.channels.AsynchronousFileChannel;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
-import java.util.concurrent.Future;
+import java.util.Iterator;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 /**
  * Created by Ranunculus on 7/05/17.
@@ -19,35 +20,53 @@ import java.util.concurrent.Future;
 @Service
 public class ParserService {
 
-    final int capacity = 1024;
+    final String DATA_SEPARATOR = "**************************************";
+    final String BREAK = "";
 
     public void parseFromFile(String fileName) {
+        Path path = null;
         try {
-            File file = ResourceUtils.getFile(fileName);
-//            Paths.get(ClassLoader.getSystemResource(fileName).toURI());
-            AsynchronousFileChannel fileChannel =
-                    AsynchronousFileChannel.open(Paths.get(ClassLoader.getSystemResource(fileName).toURI()), StandardOpenOption.READ);
+            path = Paths.get(ClassLoader.getSystemResource(fileName).toURI());
 
-            System.out.println(Paths.get(ClassLoader.getSystemResource(fileName).toURI()).getFileName());
-            ByteBuffer buffer = ByteBuffer.allocate(capacity);
-            long position = 0;
+            try (Stream<String> lines = Files.lines(path)) {
+                Iterator<String> iterator = lines.iterator();
+                Note newNote = null;
+                NotesFactory notes = new NotesFactory();
 
-            Future<Integer> operation = fileChannel.read(buffer, position);
-
-            while(!operation.isDone());
-
-            buffer.flip();
-            byte[] data = new byte[buffer.limit()];
-            buffer.get(data);
-            System.out.println(new String(data));
-            buffer.clear();
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+                while (iterator.hasNext()) {
+                    String currentLine = iterator.next();
+                    //is it next entry?
+                    Pattern pattern = Pattern.compile("\\#[1-9]+.\\s\\[([A-Z][a-z]+){1}\\]");
+                    Matcher matcher = pattern.matcher(currentLine);
+                    if (matcher.matches()) {
+//                        Pattern pattern1 = Pattern.compile("\\[([A-Z][a-z]+)\\]");
+//                        Matcher matcher1 = pattern1.matcher(currentLine);
+//                        System.out.println(matcher1.find());
+                        if (matcher.find()) {
+                            if (newNote != null) {
+                                // TODO: 9/05/17 write to a file
+                                System.out.println(newNote);
+                            }
+                            System.out.println("Color: " + matcher.group(1));
+                            newNote = notes.getNote(matcher.group(1));
+                        } else {
+                            System.out.println("incorrect start of a new note: " + currentLine);
+                            newNote = null;
+                        }
+                    } else if (newNote != null) {
+                        if (currentLine.trim().startsWith("-")){
+                            newNote.setMyNote(currentLine);
+                        } else if (currentLine.startsWith("Page")) {
+                            newNote.setPage(currentLine.substring(5));
+                        }
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         } catch (URISyntaxException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
 }
