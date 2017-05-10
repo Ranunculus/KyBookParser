@@ -9,10 +9,11 @@ import lombok.ToString;
  *
  * Created by Ranunculus on 9/05/17.
  */
-@ToString
+@ToString(callSuper=true)
 public class Quote extends MyNote {
 
-    public static final String COLOR_CODE = "Yellow";
+    @Getter
+    private static final String COLOR_CODE = "Yellow";
 
     @Getter
     @Setter

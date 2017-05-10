@@ -3,6 +3,7 @@ package com.ranunculus;
 import com.ranunculus.entries.Note;
 import com.ranunculus.entries.NotesFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -35,29 +36,25 @@ public class ParserService {
 
                 while (iterator.hasNext()) {
                     String currentLine = iterator.next();
+                    if (StringUtils.isEmpty(currentLine)) {
+                        continue;
+                    }
                     //is it next entry?
-                    Pattern pattern = Pattern.compile("\\#[1-9]+.\\s\\[([A-Z][a-z]+){1}\\]");
+                    Pattern pattern = Pattern.compile("\\#[1-9]+.\\s\\[(\\w+){1}\\]");
                     Matcher matcher = pattern.matcher(currentLine);
-                    if (matcher.matches()) {
-//                        Pattern pattern1 = Pattern.compile("\\[([A-Z][a-z]+)\\]");
-//                        Matcher matcher1 = pattern1.matcher(currentLine);
-//                        System.out.println(matcher1.find());
-                        if (matcher.find()) {
-                            if (newNote != null) {
-                                // TODO: 9/05/17 write to a file
-                                System.out.println(newNote);
-                            }
-                            System.out.println("Color: " + matcher.group(1));
-                            newNote = notes.getNote(matcher.group(1));
-                        } else {
-                            System.out.println("incorrect start of a new note: " + currentLine);
-                            newNote = null;
+                    if (matcher.find()) {
+                        if (newNote != null) {
+                            System.out.println(newNote);
+                            // TODO: 9/05/17 write to a file
                         }
+                        newNote = notes.getNote(matcher.group(1));
                     } else if (newNote != null) {
                         if (currentLine.trim().startsWith("-")){
                             newNote.setMyNote(currentLine);
                         } else if (currentLine.startsWith("Page")) {
                             newNote.setPage(currentLine.substring(5));
+                        } else if (!StringUtils.isEmpty(currentLine)) {
+                            // TODO: 11/05/17 set EntryBody
                         }
                     }
                 }

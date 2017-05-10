@@ -7,10 +7,11 @@ import lombok.ToString;
 /**
  * Created by Ranunculus on 9/05/17.
  */
-@ToString
+@ToString(callSuper=true)
 public class FurtherReading extends MyNote {
 
-    public static final String COLOR_CODE = "Blue";
+    @Getter
+    private static final String COLOR_CODE = "Blue";
 
     @Getter
     @Setter
