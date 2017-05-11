@@ -57,16 +57,17 @@ public class ParserService {
                         }
                     } else if (currentColor != null && currentEntry != null) {
                         if (currentLine.trim().startsWith("-"))  {
-                            currentEntry.append("<br>").append("My thoughts:").append("<br>").append("<i>").append(currentLine).append("</i>").append("<br>");
+                            currentEntry.append("<br><b>").append("My thoughts:").append("</b>").append("<i>").append(currentLine).append("</i>").append("<br>");
                         } else if (currentLine.startsWith("Page")) {
                             if (!"Red".equals(currentColor)) {
-                                currentEntry.append(currentLine).append("<br>");
+                                currentEntry.append("<br>").append(currentLine).append("<br>");
                             }
                         } else if (!DATA_SEPARATOR.equals(currentLine) && !StringUtils.isEmpty(currentLine)) {
                             if ("Red".equals(currentColor)) {
                                 currentEntry.append(currentLine.replaceAll("\"", ""));
+                            } else {
+                                currentEntry.append(currentLine).append(" ");
                             }
-                            currentEntry.append(currentLine);
                         }
                     }
                 }
