@@ -10,7 +10,7 @@ import lombok.ToString;
  * Created by Ranunculus on 9/05/17.
  */
 @ToString
-public abstract class MyNote implements Note {
+public class MyNote implements Note {
 
     @Getter
     @Setter
@@ -19,4 +19,14 @@ public abstract class MyNote implements Note {
     @Getter
     @Setter
     private String page;
+
+    @Getter
+    @Setter
+    private String color;
+
+    @Getter
+    @Setter
+    private String entry;
+
+
 }

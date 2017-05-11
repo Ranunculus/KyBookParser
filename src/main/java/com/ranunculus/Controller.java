@@ -1,6 +1,7 @@
 package com.ranunculus;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
@@ -19,8 +20,8 @@ public class Controller {
     }
 
     @RequestMapping("/file")
-    public String parseFile() {
-        parserService.parseFromFile("notes_example.txt");
+    public String parseFile(Model model) {
+        model.addAllAttributes(parserService.parseFromFile("notes_example.txt"));
         return "ok";
     }
 

@@ -11,4 +11,10 @@ public interface Note {
     String getMyNote();
     void setMyNote(String currentLine);
 
+    String getColor();
+    void setColor(String currentLine);
+
+    String getEntry();
+    void setEntry(String currentLine);
+
 }

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>KyBook Notes Parser</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -9,7 +9,45 @@
     <script src="webjars/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
 <body>
-    <div>Ok</div>
-
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">Ideas</h3>
+        </div>
+        <div class="panel-body" th:utext="${Green}">
+            Panel content
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">Quotes</h3>
+        </div>
+        <div class="panel-body" th:utext="${Yellow}">
+            Panel content
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">Next Action</h3>
+        </div>
+        <div class="panel-body" th:utext="${Purple}">
+            Panel content
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">Books</h3>
+        </div>
+        <div class="panel-body" th:utext="${Blue}">
+            Panel content
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">New Words</h3>
+        </div>
+        <div class="panel-body" th:utext="${Red}">
+            Panel content
+        </div>
+    </div>
 </body>
 </html>
